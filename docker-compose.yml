@@ -1,28 +1,21 @@
-version: '3.8'
+version: '3.9'
 
 services:
 
   gramine:
     image: gramine
-    build: .
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      # args:
+    environment:
+      SGX: 1
     volumes:
-      - .:/root
       - untrustedhost:/root/untrustedhost
+      - /var/run/aesmd/aesm.socket:/var/run/aesmd/aesm.socket
     devices:
-      - /dev/sgx_enclave:/dev/sgx_enclave
-      - /dev/sgx_provision:/dev/sgx_provision
-    working_dir: /root
-    command: >
-      bash -c "
-        if [ ! -f nodejs.manifest.sgx ]; then
-          SGX=1 make &&
-          cd walle && pnpm build && cd .. &&
-          gramine-sgx nodejs walle/dist/index.js
-        else
-          cd walle && pnpm build && cd .. &&
-          gramine-sgx nodejs walle/dist/index.js
-        fi
-      "
+      - /dev/sgx_enclave
+      - /dev/sgx_provision
 
 volumes:
   untrustedhost:
