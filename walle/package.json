@@ -1,0 +1,33 @@
+{
+    "name": "goat-examples-vercel-ai-crossmint-smart-wallets",
+    "version": "0.2.16",
+    "private": true,
+    "description": "",
+    "scripts": {
+        "create-wallet": "ts-node create-smart-wallet.ts",
+        "test": "vitest run --passWithNoTests"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@ai-sdk/openai": "1.0.6",
+        "@ai-sdk/provider": "1.0.6",
+        "@goat-sdk/adapter-vercel-ai": "0.2.7",
+        "@goat-sdk/core": "0.4.6",
+        "@goat-sdk/crossmint": "0.3.14",
+        "@goat-sdk/plugin-erc20": "0.2.8",
+        "@goat-sdk/wallet-evm": "0.2.6",
+        "@goat-sdk/wallet-viem": "0.2.6",
+        "ai": "4.1.0",
+        "dotenv": "^16.3.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3",
+        "viem": "2.21.49"
+    },
+    "resolutions": {
+        "@ai-sdk/provider": "1.0.6"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.10"
+    }
+}
