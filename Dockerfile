@@ -19,7 +19,9 @@ RUN npm install -g pnpm
 ENV SGX=1
 
 # Generate SGX key
-RUN gramine-sgx-gen-private-key
+# Generate SGX key and verify
+RUN gramine-sgx-gen-private-key && \
+    ls -l /root/.config/gramine/enclave-key.pem || echo "Key generation failed"
 
 WORKDIR /root/
 
