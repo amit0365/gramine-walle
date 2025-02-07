@@ -93,3 +93,8 @@ clean:
 .PHONY: distclean
 distclean: clean
 	$(RM) -r $(APP_DIR)/node_modules
+
+# SGX build target
+.PHONY: sgx
+sgx: clean
+	SGX=1 make
