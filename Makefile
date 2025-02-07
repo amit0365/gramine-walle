@@ -69,9 +69,14 @@ nodejs.manifest.sgx nodejs.sig: sgx_sign
 
 .INTERMEDIATE: sgx_sign
 sgx_sign: nodejs.manifest
+	@echo "Checking SGX key..."
+	@test -f /root/.config/gramine/enclave-key.pem || (echo "SGX key missing" && exit 1)
+	@echo "Signing manifest..."
 	gramine-sgx-sign \
 		--manifest $< \
-		--output $<.sgx
+		--output $<.sgx \
+		--key /root/.config/gramine/enclave-key.pem
+	@echo "Signing complete"
 
 ############################### GRAMINE COMMAND ###############################
 
