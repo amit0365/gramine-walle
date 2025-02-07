@@ -1,8 +1,12 @@
 FROM gramineproject/gramine:v1.5
 
+# Install required packages
 RUN apt-get update && apt-get install -y \
     make \
     curl \
+    gcc \
+    g++ \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js
@@ -15,7 +19,8 @@ RUN npm install -g pnpm
 ENV SGX=1
 
 # Generate SGX key
-RUN gramine-sgx-gen-private-key
+RUN mkdir -p /root/.config/gramine && \
+    gramine-sgx-gen-private-key
 
 WORKDIR /root/
 
