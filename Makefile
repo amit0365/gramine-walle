@@ -24,7 +24,7 @@ APP_DIR = walle
 # Directory with arch-specific libraries
 # the below path works for Debian/Ubuntu; for CentOS/RHEL/Fedora, you should
 # overwrite this default like this: `ARCH_LIBDIR=/lib64 make`
-ARCH_LIBDIR ?= /lib/$(shell $(CC) -dumpmachine)
+ARCH_LIBDIR ?= /lib/x86_64-linux-gnu
 
 # Set debug log level if DEBUG=1
 ifeq ($(DEBUG),1)
