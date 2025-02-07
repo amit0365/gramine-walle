@@ -3,9 +3,7 @@
 
 # Node.js manifest file example
 
-################################## BASE TEMPLATE #############################
-
-libos.entrypoint = "{{ nodejs_dir }}/node"
+libos.entrypoint = "{{ nodejs_dir }}/nodejs"
 
 loader.log_level = "{{ log_level }}"
 
@@ -18,12 +16,13 @@ fs.mounts = [
   { uri = "file:{{ gramine.runtimedir() }}", path = "/lib" },
   { uri = "file:{{ arch_libdir }}", path = "{{ arch_libdir }}" },
   { uri = "file:/usr/{{ arch_libdir }}", path = "/usr/{{ arch_libdir }}" },
-  { uri = "file:{{ nodejs_dir }}/node", path = "{{ nodejs_dir }}/node" },
+  { uri = "file:{{ nodejs_dir }}/nodejs", path = "{{ nodejs_dir }}/nodejs" },
 {%- if nodejs_usr_share_dir %}
   { uri = "file:{{ nodejs_usr_share_dir }}", path = "{{ nodejs_usr_share_dir }}" },
 {%- endif %}
-  # Additional mount for our application
-  { uri = "file:walle", path = "/walle" }
+  { uri = "file:walle", path = "/walle" },
+  { type = "tmpfs", path = "/tmp" },
+  { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
 ]
 
 # Node.js expects around 1.7GB of heap on startup
@@ -36,28 +35,17 @@ sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 sgx.use_exinfo = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 
 sgx.trusted_files = [
-  "file:{{ nodejs_dir }}/node",
+  "file:{{ nodejs_dir }}/nodejs",
 {%- if nodejs_usr_share_dir %}
   "file:{{ nodejs_usr_share_dir }}/",
 {%- endif %}
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
   "file:/usr/{{ arch_libdir }}/",
-  # Additional trusted files for our application
   "file:walle/"
 ]
 
-################################## ADDITIONAL FEATURES #############################
-
-# Remote attestation support
+# Additional features
 loader.env.RA_TYPE = "dcap"
 sgx.remote_attestation = "dcap"
-
-# System configuration
 sys.enable_sigterm_injection = true
-
-# Additional mounts
-fs.mounts += [
-  { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" },
-  { type = "tmpfs", path = "/tmp" }
-]
