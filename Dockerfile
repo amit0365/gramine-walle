@@ -18,7 +18,7 @@ WORKDIR /root/
 
 # Add your application files
 ADD walle/ ./walle/
-ADD nodejs.manifest.template ./
+ADD nodejs.manifest ./
 ADD Makefile ./
 
 # Create directory for untrusted host files if needed
