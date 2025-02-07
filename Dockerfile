@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
+# Install pnpm
+RUN npm install -g pnpm
+
 ENV SGX=1
 
 # Generate SGX key
@@ -23,6 +26,9 @@ ADD Makefile ./
 
 # Create directory for untrusted host files if needed
 RUN mkdir -p untrustedhost
+
+# Install dependencies and build TypeScript
+RUN cd walle && pnpm install && pnpm build
 
 # Build SGX application
 RUN SGX=1 make

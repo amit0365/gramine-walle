@@ -45,7 +45,7 @@ endif
 
 # Install Node.js dependencies
 $(APP_DIR)/node_modules:
-	cd $(APP_DIR) && npm install
+	cd $(APP_DIR) && pnpm install
 
 ################################ NODE.JS MANIFEST ###############################
 
