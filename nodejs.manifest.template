@@ -1,60 +1,51 @@
 # Copyright (C) 2024 Gramine contributors
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Node.js manifest file for Gramine
+# Node.js manifest file example
 
-################################## GRAMINE ####################################
+################################## BASE TEMPLATE #############################
 
-# Entrypoint binary which Gramine invokes
 libos.entrypoint = "{{ nodejs_dir }}/node"
 
-################################# ARGUMENTS ###################################
-
 loader.log_level = "{{ log_level }}"
-loader.insecure__use_cmdline_argv = true
-loader.insecure__use_host_env = true
-
-################################# ENV VARS ###################################
 
 loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
 
-################################# MOUNT FS ###################################
+loader.insecure__use_cmdline_argv = true
+loader.insecure__use_host_env = true
 
 fs.mounts = [
-    { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
-    { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
-    { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
-    { path = "{{ nodejs_dir }}/node", uri = "file:{{ nodejs_dir }}/node" },
+  { uri = "file:{{ gramine.runtimedir() }}", path = "/lib" },
+  { uri = "file:{{ arch_libdir }}", path = "{{ arch_libdir }}" },
+  { uri = "file:/usr/{{ arch_libdir }}", path = "/usr/{{ arch_libdir }}" },
+  { uri = "file:{{ nodejs_dir }}/node", path = "{{ nodejs_dir }}/node" },
 {%- if nodejs_usr_share_dir %}
-    { path = "{{ nodejs_usr_share_dir }}", uri = "file:{{ nodejs_usr_share_dir }}" },
+  { uri = "file:{{ nodejs_usr_share_dir }}", path = "{{ nodejs_usr_share_dir }}" },
 {%- endif %}
-    { path = "/walle", uri = "file:walle" }
+  # Additional mount for our application
+  { uri = "file:walle", path = "/walle" }
 ]
 
-############################### SGX: GENERAL ##################################
-
-sgx.debug = true
+# Node.js expects around 1.7GB of heap on startup
 sgx.enclave_size = "2G"
+
 sgx.max_threads = {{ '1' if env.get('EDMM', '0') == '1' else '32' }}
 sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+
+# Required for Node.js memory mappings with MAP_NORESERVE
 sgx.use_exinfo = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 
-############################# SGX: TRUSTED FILES ##############################
-
 sgx.trusted_files = [
-    "file:{{ nodejs_dir }}/node",
+  "file:{{ nodejs_dir }}/node",
 {%- if nodejs_usr_share_dir %}
-    "file:{{ nodejs_usr_share_dir }}/",
+  "file:{{ nodejs_usr_share_dir }}/",
 {%- endif %}
-    "file:{{ gramine.runtimedir() }}/",
-    "file:{{ arch_libdir }}/",
-    "file:/usr/{{ arch_libdir }}/",
-    "file:walle/"
+  "file:{{ gramine.runtimedir() }}/",
+  "file:{{ arch_libdir }}/",
+  "file:/usr/{{ arch_libdir }}/",
+  # Additional trusted files for our application
+  "file:walle/"
 ]
-
-################################## SIGNALS ###################################
-
-sys.enable_sigterm_injection = true
 
 ################################## ADDITIONAL FEATURES #############################
 
@@ -62,12 +53,11 @@ sys.enable_sigterm_injection = true
 loader.env.RA_TYPE = "dcap"
 sgx.remote_attestation = "dcap"
 
-# Encrypted storage
-fs.mounts += [
-    { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
-]
+# System configuration
+sys.enable_sigterm_injection = true
 
-# Temporary storage
+# Additional mounts
 fs.mounts += [
-    { type = "tmpfs", path = "/tmp" }
+  { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" },
+  { type = "tmpfs", path = "/tmp" }
 ]
