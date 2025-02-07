@@ -34,4 +34,4 @@ RUN cd walle && pnpm install && pnpm build
 RUN SGX=1 make
 
 ENTRYPOINT []
-CMD [ "gramine-sgx", "nodejs" ]
+CMD [ "gramine-sgx-sigstruct-view", "nodejs.sig" ]
