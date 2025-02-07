@@ -1,86 +1,73 @@
 # Copyright (C) 2024 Gramine contributors
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Node.js manifest file for Walle application
+# Node.js manifest file for Gramine
 
 ################################## GRAMINE ####################################
 
 # Entrypoint binary which Gramine invokes
-libos.entrypoint = "{{ nodejs_dir }}/nodejs"
-
-# Verbosity of Gramine debug log (none/error/warning/debug/trace/all)
-loader.log_level = "{{ log_level }}"
+libos.entrypoint = "{{ nodejs_dir }}/node"
 
 ################################# ARGUMENTS ###################################
 
-# Allow passing command line arguments from host to Node.js
+loader.log_level = "{{ log_level }}"
 loader.insecure__use_cmdline_argv = true
-
-################################# ENV VARS ####################################
-
-# Specify paths to search for libraries
-loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
-
-# Allow passing environment variables from host
 loader.insecure__use_host_env = true
 
-################################# MOUNT FS ####################################
+################################# ENV VARS ###################################
+
+loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
+
+################################# MOUNT FS ###################################
 
 fs.mounts = [
-  # Mount runtime libraries
-  { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
-  
-  # Mount system libraries
-  { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
-  { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
-  
-  # Mount Node.js binary
-  { path = "{{ nodejs_dir }}/nodejs", uri = "file:{{ nodejs_dir }}/nodejs" },
-  
-  # Mount Node.js shared resources if available
+    { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+    { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
+    { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
+    { path = "{{ nodejs_dir }}/node", uri = "file:{{ nodejs_dir }}/node" },
 {%- if nodejs_usr_share_dir %}
-  { path = "{{ nodejs_usr_share_dir }}", uri = "file:{{ nodejs_usr_share_dir }}" },
+    { path = "{{ nodejs_usr_share_dir }}", uri = "file:{{ nodejs_usr_share_dir }}" },
 {%- endif %}
-
-  # Mount application directory
-  { path = "/walle", uri = "file:walle" },
+    { path = "/walle", uri = "file:walle" }
 ]
 
 ############################### SGX: GENERAL ##################################
 
-# Set debug mode for development (remove in production)
 sgx.debug = true
-
-# Node.js requires significant heap space on startup
 sgx.enclave_size = "2G"
-
-# Configure EDMM (Enclave Dynamic Memory Management)
-sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 sgx.max_threads = {{ '1' if env.get('EDMM', '0') == '1' else '32' }}
-
-# Required for Node.js memory mappings with EDMM
+sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 sgx.use_exinfo = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 
-############################# SGX: TRUSTED FILES ###############################
+############################# SGX: TRUSTED FILES ##############################
 
-# Specify all files that should be verified at runtime
 sgx.trusted_files = [
-  # Node.js binary and shared resources
-  "file:{{ nodejs_dir }}/nodejs",
+    "file:{{ nodejs_dir }}/node",
 {%- if nodejs_usr_share_dir %}
-  "file:{{ nodejs_usr_share_dir }}/",
+    "file:{{ nodejs_usr_share_dir }}/",
 {%- endif %}
-
-  # System libraries
-  "file:{{ gramine.runtimedir() }}/",
-  "file:{{ arch_libdir }}/",
-  "file:/usr/{{ arch_libdir }}/",
-
-  # Application files
-  "file:walle/",
+    "file:{{ gramine.runtimedir() }}/",
+    "file:{{ arch_libdir }}/",
+    "file:/usr/{{ arch_libdir }}/",
+    "file:walle/"
 ]
 
-################################## SIGNALS ####################################
+################################## SIGNALS ###################################
 
-# Allow for injecting SIGTERM signal from the host
 sys.enable_sigterm_injection = true
+
+################################## ADDITIONAL FEATURES #############################
+
+# Remote attestation support
+loader.env.RA_TYPE = "dcap"
+sgx.remote_attestation = "dcap"
+
+# Encrypted storage
+fs.mounts += [
+    { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
+]
+
+# Temporary storage
+fs.mounts += [
+    { type = "tmpfs", path = "/tmp" }
+]

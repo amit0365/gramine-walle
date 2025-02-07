@@ -19,8 +19,7 @@ RUN npm install -g pnpm
 ENV SGX=1
 
 # Generate SGX key
-RUN mkdir -p /root/.config/gramine && \
-    gramine-sgx-gen-private-key
+RUN gramine-sgx-gen-private-key
 
 WORKDIR /root/
 
