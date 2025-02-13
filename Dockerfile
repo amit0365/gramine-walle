@@ -1,4 +1,4 @@
-FROM gramineproject/gramine:v1.7
+FROM gramineproject/gramine:latest
 
 # Install required packages
 RUN apt-get update && apt-get install -y \
