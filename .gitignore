@@ -1,1 +1,6 @@
 .env
+walle/node_modules
+
+eliza.manifest
+eliza.manifest.sgx
+eliza.sig

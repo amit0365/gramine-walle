@@ -3,12 +3,16 @@
 
 # Node.js manifest file example
 
-libos.entrypoint = "{{ nodejs_dir }}/nodejs"
+loader.entrypoint = "{{ nodejs_dir }}/nodejs"
+
+fs.start_dir = "/walle"
 
 loader.log_level = "{{ log_level }}"
 
 loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
 
+# Insecure configuration for loading arguments and environment variables
+# Do not set these configurations in production
 loader.insecure__use_cmdline_argv = true
 loader.insecure__use_host_env = true
 
@@ -16,36 +20,39 @@ fs.mounts = [
   { uri = "file:{{ gramine.runtimedir() }}", path = "/lib" },
   { uri = "file:{{ arch_libdir }}", path = "{{ arch_libdir }}" },
   { uri = "file:/usr/{{ arch_libdir }}", path = "/usr/{{ arch_libdir }}" },
-  { uri = "file:{{ nodejs_dir }}/nodejs", path = "{{ nodejs_dir }}/nodejs" },
-{%- if nodejs_usr_share_dir %}
-  { uri = "file:{{ nodejs_usr_share_dir }}", path = "{{ nodejs_usr_share_dir }}" },
-{%- endif %}
+  { uri = "file:{{ nodejs_dir }}/node", path = "{{ nodejs_dir }}/node" },
+
   { uri = "file:walle", path = "/walle" },
   { type = "tmpfs", path = "/tmp" },
   { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
 ]
 
+sys.enable_extra_runtime_domain_names_conf = true
+sys.fds.limit = 65535
+
+sgx.debug = false
+sgx.remote_attestation = "dcap"
+sgx.max_threads = 64
+
 # Node.js expects around 1.7GB of heap on startup
 sgx.enclave_size = "2G"
 
-sgx.max_threads = {{ '1' if env.get('EDMM', '0') == '1' else '32' }}
+# `use_exinfo = true` is needed because Node.js uses memory mappings with `MAP_NORESERVE`, which
+# will defer page accepts to page-fault events when EDMM is enabled
 sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
-
-# Required for Node.js memory mappings with MAP_NORESERVE
 sgx.use_exinfo = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 
 sgx.trusted_files = [
-  "file:{{ nodejs_dir }}/nodejs",
-{%- if nodejs_usr_share_dir %}
-  "file:{{ nodejs_usr_share_dir }}/",
-{%- endif %}
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
   "file:/usr/{{ arch_libdir }}/",
+  "file:{{ nodejs_dir }}/node",
   "file:walle/"
 ]
 
-# Additional features
-loader.env.RA_TYPE = "dcap"
-sgx.remote_attestation = "dcap"
-sys.enable_sigterm_injection = true
+# Insecure configuration. Use gramine encrypted fs to store data in production.
+sgx.allowed_files = [
+  "file:walle/node_modules",
+]
+
+loader.env.SGX = "1"
