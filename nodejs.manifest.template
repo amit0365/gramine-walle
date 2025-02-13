@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 # Node.js manifest file example
-
-loader.entrypoint = "file:{{ nodejs_dir }}/nodejs"
+loader.entrypoint = "file:{{ gramine.libos }}"
+libos.entrypoint = "file:{{ nodejs_dir }}/nodejs"
 
 fs.start_dir = "/walle"
 
@@ -20,7 +20,7 @@ fs.mounts = [
   { uri = "file:{{ gramine.runtimedir() }}", path = "/lib" },
   { uri = "file:{{ arch_libdir }}", path = "{{ arch_libdir }}" },
   { uri = "file:/usr/{{ arch_libdir }}", path = "/usr/{{ arch_libdir }}" },
-  { uri = "file:{{ nodejs_dir }}/node", path = "{{ nodejs_dir }}/node" },
+  { uri = "file:{{ nodejs_dir }}/nodejs", path = "{{ nodejs_dir }}/nodejs" },
 
   { uri = "file:walle", path = "/walle" },
   { type = "tmpfs", path = "/tmp" },
@@ -46,7 +46,7 @@ sgx.trusted_files = [
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
   "file:/usr/{{ arch_libdir }}/",
-  "file:{{ nodejs_dir }}/node",
+  "file:{{ nodejs_dir }}/nodejs",
   "file:walle/"
 ]
 
