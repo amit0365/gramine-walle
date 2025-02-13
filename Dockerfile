@@ -4,7 +4,6 @@ FROM gramineproject/gramine:stable-noble
 RUN apt-get update && apt-get install -y \
     make \
     curl \
-    gcc \
     g++ \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
@@ -37,7 +36,7 @@ RUN mkdir -p untrustedhost
 RUN cd walle && pnpm install && pnpm build
 
 # Build SGX application
-RUN SGX=1 make && \
+RUN SGX=1 DEBUG=1 make && \
     test -f nodejs.manifest.sgx || (echo "SGX manifest not generated" && exit 1)
 
 ENTRYPOINT []
