@@ -41,4 +41,4 @@ RUN SGX=1 make && \
     test -f nodejs.manifest.sgx || (echo "SGX manifest not generated" && exit 1)
 
 ENTRYPOINT []
-CMD ["gramine-sgx-sigstruct-view", "nodejs.sig", "--trace-events-enabled=0"]
+CMD ["gramine-sgx-sigstruct-view", "nodejs.sig"]
