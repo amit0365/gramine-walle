@@ -10,7 +10,6 @@ services:
       # args:
     environment:
       SGX: 1
-      NODE_OPTIONS: "--trace-events-enabled=0"
     volumes:
       - untrustedhost:/root/untrustedhost
       - /var/run/aesmd/aesm.socket:/var/run/aesmd/aesm.socket
