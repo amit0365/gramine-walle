@@ -3,7 +3,7 @@
 
 # Node.js manifest file example
 
-loader.entrypoint = "{{ nodejs_dir }}/nodejs"
+loader.entrypoint = "file:{{ nodejs_dir }}/nodejs"
 
 fs.start_dir = "/walle"
 
