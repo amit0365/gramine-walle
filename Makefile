@@ -102,4 +102,4 @@ distclean: clean
 # SGX build target
 .PHONY: sgx
 sgx: clean
-	SGX=1 DEBUG=1 make
+	SGX=1 make
