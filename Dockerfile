@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
+    && apt-get install -y nodejs=23.3.0-1nodesource1
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -41,4 +41,4 @@ RUN SGX=1 make && \
     test -f nodejs.manifest.sgx || (echo "SGX manifest not generated" && exit 1)
 
 ENTRYPOINT []
-CMD ["gramine-sgx", "node", "--trace-events-enabled=0"]
+CMD ["gramine-sgx-sigstruct-view", "nodejs.sig", "--trace-events-enabled=0"]
