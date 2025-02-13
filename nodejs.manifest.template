@@ -46,7 +46,11 @@ sgx.trusted_files = [
   "file:{{ arch_libdir }}/",
   "file:/usr/{{ arch_libdir }}/",
   "file:{{ nodejs_dir }}/nodejs",
-  "file:walle/"
+  "file:walle/create-smart-wallet.ts",
+  "file:walle/index.ts",
+  "file:walle/package.json",
+  "file:walle/tsconfig.json",
+  "file:walle/pnpm-lock.yaml",
 ]
 
 # Insecure configuration. Use gramine encrypted fs to store data in production.
