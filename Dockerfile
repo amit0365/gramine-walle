@@ -1,4 +1,4 @@
-FROM gramineproject/gramine:latest
+FROM gramineproject/gramine:stable-noble
 
 # Install required packages
 RUN apt-get update && apt-get install -y \
