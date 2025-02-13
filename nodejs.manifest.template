@@ -34,7 +34,7 @@ sgx.remote_attestation = "dcap"
 sgx.max_threads = 64
 
 # Node.js expects around 1.7GB of heap on startup
-sgx.enclave_size = "2G"
+sgx.enclave_size = "16G"
 
 # `use_exinfo = true` is needed because Node.js uses memory mappings with `MAP_NORESERVE`, which
 # will defer page accepts to page-fault events when EDMM is enabled
