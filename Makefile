@@ -36,7 +36,7 @@ endif
 ################################## TARGETS ###################################
 
 .PHONY: all
-all: $(APP_DIR)/node_modules nodejs.manifest
+all: nodejs.manifest
 ifeq ($(SGX),1)
 all: nodejs.manifest.sgx nodejs.sig
 endif
@@ -53,7 +53,7 @@ $(APP_DIR)/node_modules:
 # information to run Node.js under Gramine / Gramine-SGX. We create
 # nodejs.manifest (to be run under non-SGX Gramine) by replacing variables
 # in the template file using the "gramine-manifest" script.
-nodejs.manifest: nodejs.manifest.template $(APP_DIR)/node_modules
+nodejs.manifest: nodejs.manifest.template
 	gramine-manifest \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
@@ -69,14 +69,10 @@ nodejs.manifest.sgx nodejs.sig: sgx_sign
 
 .INTERMEDIATE: sgx_sign
 sgx_sign: nodejs.manifest
-	@echo "Checking SGX key..."
-	@test -f /root/.config/gramine/enclave-key.pem || (echo "SGX key missing" && exit 1)
-	@echo "Signing manifest..."
 	gramine-sgx-sign \
 		--manifest $< \
 		--output $<.sgx \
-		--key /root/.config/gramine/enclave-key.pem
-	@echo "Signing complete"
+
 
 ############################### GRAMINE COMMAND ###############################
 
@@ -97,9 +93,3 @@ clean:
 # Distclean additionally removes node_modules
 .PHONY: distclean
 distclean: clean
-	$(RM) -r $(APP_DIR)/node_modules
-
-# SGX build target
-.PHONY: sgx
-sgx: clean
-	SGX=1 make
