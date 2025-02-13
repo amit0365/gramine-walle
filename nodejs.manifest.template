@@ -3,7 +3,7 @@
 
 # Node.js manifest file example
 loader.entrypoint = "file:{{ gramine.libos }}"
-libos.entrypoint = "file:{{ nodejs_dir }}/nodejs"
+libos.entrypoint = "{{ nodejs_dir }}/nodejs"
 
 fs.start_dir = "/walle"
 
@@ -21,7 +21,6 @@ fs.mounts = [
   { uri = "file:{{ arch_libdir }}", path = "{{ arch_libdir }}" },
   { uri = "file:/usr/{{ arch_libdir }}", path = "/usr/{{ arch_libdir }}" },
   { uri = "file:{{ nodejs_dir }}/nodejs", path = "{{ nodejs_dir }}/nodejs" },
-
   { uri = "file:walle", path = "/walle" },
   { type = "tmpfs", path = "/tmp" },
   { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
