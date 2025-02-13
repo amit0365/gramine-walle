@@ -9,6 +9,8 @@ fs.start_dir = "/walle"
 
 loader.log_level = "{{ log_level }}"
 
+loader.env.RA_TYPE = "dcap"
+
 loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
 
 # Insecure configuration for loading arguments and environment variables

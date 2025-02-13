@@ -4,7 +4,6 @@ FROM gramineproject/gramine:stable-noble
 RUN apt-get update && apt-get install -y \
     make \
     curl \
-    g++ \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
