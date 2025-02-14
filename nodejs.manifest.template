@@ -30,6 +30,9 @@ fs.mounts = [
   { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
 ]
 
+[fs.files]
+"/walle/hello_world.js" = "ro"
+
 sys.enable_extra_runtime_domain_names_conf = true
 sys.fds.limit = 65535
 
@@ -52,6 +55,7 @@ sgx.trusted_files = [
   "file:{{ nodejs_dir }}/nodejs",
   "file:walle/create-smart-wallet.ts",
   "file:walle/index.ts",
+  "file:walle/hello-world.js",
   "file:walle/package.json",
   "file:walle/tsconfig.json",
   "file:walle/pnpm-lock.yaml",
