@@ -16,7 +16,6 @@ services:
     devices:
       - /dev/sgx_enclave
       - /dev/sgx_provision
-      - /dev/attestation
-
+      
 volumes:
   untrustedhost:

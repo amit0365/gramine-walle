@@ -53,7 +53,7 @@ $(APP_DIR)/node_modules:
 # information to run Node.js under Gramine / Gramine-SGX. We create
 # nodejs.manifest (to be run under non-SGX Gramine) by replacing variables
 # in the template file using the "gramine-manifest" script.
-nodejs.manifest: nodejs.manifest.template
+nodejs.manifest: nodejs.manifest.template walle/hello_world.ts
 	gramine-manifest \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
@@ -84,6 +84,12 @@ GRAMINE = gramine-sgx
 endif
 
 ################################## CLEANUP ###################################
+
+.PHONY: check
+check: all
+	$(GRAMINE) ./nodejs walle/hello_world.ts > OUTPUT
+	@grep -q "Hello World" OUTPUT && echo "[ Success 1/1 ]"
+	@rm OUTPUT
 
 # Remove all generated files
 .PHONY: clean
