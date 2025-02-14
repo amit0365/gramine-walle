@@ -13,6 +13,8 @@ loader.env.RA_TYPE = "dcap"
 
 loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
 
+sys.enable_sigterm_injection = true
+
 # Insecure configuration for loading arguments and environment variables
 # Do not set these configurations in production
 loader.insecure__use_cmdline_argv = true
