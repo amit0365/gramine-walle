@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
     && apt-get install -y nodejs=23.3.0-1nodesource1
 
+COPY quote_reader.py /root/quote_reader.py
+
 # Install pnpm
 RUN npm install -g pnpm
 
