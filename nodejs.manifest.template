@@ -30,9 +30,6 @@ fs.mounts = [
   { type = "encrypted", path = "/data/", uri = "file:enclave_data/", key_name = "_sgx_mrenclave" }
 ]
 
-[fs.readonly_files]
-"/walle/hello_world.js" = "ro"
-
 sys.enable_extra_runtime_domain_names_conf = true
 sys.fds.limit = 65535
 
