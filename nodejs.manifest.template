@@ -52,7 +52,7 @@ sgx.trusted_files = [
   "file:{{ nodejs_dir }}/nodejs",
   "file:walle/create-smart-wallet.ts",
   "file:walle/index.ts",
-  "file:walle/hello-world.js",
+  "file:walle/hello_world.js",
   "file:walle/package.json",
   "file:walle/tsconfig.json",
   "file:walle/pnpm-lock.yaml",
