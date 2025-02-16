@@ -39,4 +39,4 @@ RUN SGX=1 DEBUG=1 make && \
     test -f nodejs.manifest.sgx || (echo "SGX manifest not generated" && exit 1)
 
 ENTRYPOINT []
-CMD ["gramine-sgx-sigstruct-view", "nodejs.sig", "/root/hello-world.js"]
+CMD ["gramine-sgx", "/usr/bin/node", "/root/walle/hello_world.js"]
