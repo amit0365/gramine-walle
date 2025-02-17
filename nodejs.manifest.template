@@ -58,8 +58,18 @@ sgx.trusted_files = [
   "file:walle/pnpm-lock.yaml",
 
   # Node modules
-  "file:node_modules/.bin/",
+  # Node modules bin executables
+  "file:node_modules/.bin/ts-node",
+  "file:node_modules/.bin/ts-node-cwd",
+  "file:node_modules/.bin/ts-node-esm",
+  "file:node_modules/.bin/ts-node-script",
+  "file:node_modules/.bin/ts-node-transpile-only",
+  "file:node_modules/.bin/ts-script",
+  "file:node_modules/.bin/tsc",
+  "file:node_modules/.bin/tsserver",
+
   "file:node_modules/.pnpm/",
+
   "file:node_modules/@ai-sdk/",
   "file:node_modules/@goat-sdk/",
   "file:node_modules/@types/",
