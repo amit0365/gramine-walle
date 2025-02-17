@@ -68,7 +68,6 @@ sgx.trusted_files = [
   "file:node_modules/.bin/tsc",
   "file:node_modules/.bin/tsserver",
 
-sgx.trusted_files = [
   # Binaries
   "file:node_modules/.bin/ts-node",
   "file:node_modules/.bin/ts-node-cwd",
@@ -164,7 +163,6 @@ sgx.trusted_files = [
   "file:node_modules/.pnpm/yn@3.1.1/node_modules/yn/",
   "file:node_modules/.pnpm/zod-to-json-schema@3.24.1/node_modules/zod-to-json-schema/",
   "file:node_modules/.pnpm/zod@3.23.8/node_modules/zod/"
-]
 
   "file:node_modules/@ai-sdk/",
   "file:node_modules/@goat-sdk/",
