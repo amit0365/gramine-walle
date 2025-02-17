@@ -17,8 +17,8 @@ sys.enable_sigterm_injection = true
 
 # Insecure configuration for loading arguments and environment variables
 # Do not set these configurations in production
-loader.insecure__use_cmdline_argv = true
-loader.insecure__use_host_env = true
+# loader.insecure__use_cmdline_argv = true
+# loader.insecure__use_host_env = true
 
 fs.mounts = [
   { uri = "file:{{ gramine.runtimedir() }}", path = "/lib" },
@@ -56,11 +56,22 @@ sgx.trusted_files = [
   "file:walle/package.json",
   "file:walle/tsconfig.json",
   "file:walle/pnpm-lock.yaml",
+
+  # Node modules
+  "file:node_modules/.bin/",
+  "file:node_modules/.pnpm/",
+  "file:node_modules/@ai-sdk/",
+  "file:node_modules/@goat-sdk/",
+  "file:node_modules/@types/",
+  "file:node_modules/ai/",
+  "file:node_modules/dotenv/",
+  "file:node_modules/ts-node/",
+  "file:node_modules/typescript/",
+  "file:node_modules/viem/",
 ]
 
 # Insecure configuration. Use gramine encrypted fs to store data in production.
-sgx.allowed_files = [
-  "file:walle/node_modules",
-]
+# sgx.allowed_files = [
+# ]
 
 loader.env.SGX = "1"
