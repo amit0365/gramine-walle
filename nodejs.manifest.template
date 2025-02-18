@@ -56,36 +56,6 @@ sgx.trusted_files = [
   "file:walle/package.json",
   "file:walle/tsconfig.json",
   "file:walle/pnpm-lock.yaml",
-
-  # Node modules
-  # Node modules bin executables
-  "file:node_modules/.bin/ts-node",
-  "file:node_modules/.bin/ts-node-cwd",
-  "file:node_modules/.bin/ts-node-esm",
-  "file:node_modules/.bin/ts-node-script",
-  "file:node_modules/.bin/ts-node-transpile-only",
-  "file:node_modules/.bin/ts-script",
-  "file:node_modules/.bin/tsc",
-  "file:node_modules/.bin/tsserver",
-
-  # Binaries
-  "file:node_modules/.bin/ts-node",
-  "file:node_modules/.bin/ts-node-cwd",
-  "file:node_modules/.bin/ts-node-esm",
-  "file:node_modules/.bin/ts-node-script",
-  "file:node_modules/.bin/ts-node-transpile-only",
-  "file:node_modules/.bin/ts-script",
-  "file:node_modules/.bin/tsc",
-  "file:node_modules/.bin/tsserver",
-
-  "file:node_modules/@ai-sdk/",
-  "file:node_modules/@goat-sdk/",
-  "file:node_modules/@types/",
-  "file:node_modules/ai/",
-  "file:node_modules/dotenv/",
-  "file:node_modules/ts-node/",
-  "file:node_modules/typescript/",
-  "file:node_modules/viem/",
 ]
 
 # Insecure configuration. Use gramine encrypted fs to store data in production.
